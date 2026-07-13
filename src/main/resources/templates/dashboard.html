@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" th:replace="~{layout :: primelayout(~{::title}, ~{::body})}">
+<head>
+    <title>Dashboard</title>
+    
+    <style>
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; width: 100%; max-width: 1100px; }
+        .h-title { font-size: 28px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; }
+        .h-subtitle { font-size: 14px; color: #64748b; margin-top: 4px; }
+        .h-btn { background: #4f46e5; color: #ffffff !important; padding: 13px 24px; border-radius: 14px; font-weight: 600; text-decoration: none !important; font-size: 14px; box-shadow: 0 10px 15px -3px rgba(80, 70, 229, 0.2); transition: all 0.2s; }
+        .h-btn:hover { background: #4338ca; transform: translateY(-1px); }
+
+        /* Dynamic Metrics Alignment */
+        .metrics-grid { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 35px; width: 100%; max-width: 1100px; }
+        .m-card { flex: 1; min-width: 260px; background: #ffffff; border: 1px solid rgba(226, 232, 240, 0.8); border-radius: 20px; padding: 26px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 8px; }
+        .m-lbl { font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+        .m-val { font-size: 26px; font-weight: 800; color: #0f172a; }
+        
+        /* Custom Left Border Highlights */
+        .border-blue { border-left: 5px solid #4f46e5; }
+        .border-orange { border-left: 5px solid #ea580c; }
+        .border-green { border-left: 5px solid #16a34a; }
+
+        /* Sleek Modern Table Design */
+        .table-container { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); width: 100%; max-width: 1100px; }
+        .table-title { padding: 22px 26px; background: #f8fafc; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 1px solid #e2e8f0; }
+        .ui-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        .ui-table th { padding: 16px 26px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; border-bottom: 1px solid #e2e8f0; letter-spacing: 0.05em; background: #f8fafc; }
+        .ui-table td { padding: 18px 26px; color: #334155; border-bottom: 1px solid #f1f5f9; font-weight: 500; }
+        .ui-table tr:hover { background: #f8fafc; }
+        .cat-tag { background: #f1f5f9; color: #475569; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+        .price-text { text-align: right; font-weight: 700; color: #0f172a; font-size: 15px; }
+        .no-data { text-align: center; color: #94a3b8; padding: 50px !important; font-weight: 500; }
+    </style>
+    
+</head>
+<body>
+
+    <div class="header-row">
+        <div>
+            <h1 class="h-title">Financial Analytical Console</h1>
+            <p class="h-subtitle">Real-time status logs tracking matrices.</p>
+        </div>
+        <a th:href="@{/expenses/add-view}" class="h-btn">+ Add Expense Record</a>
+    </div>
+
+    <!-- Balanced Metrics Cards Grid -->
+    <div class="metrics-grid">
+        <div class="m-card border-blue">
+            <p class="m-lbl">Allocated Budget Limit</p>
+            <h3 class="m-val" th:text="${'₹' + budgetLimit}"></h3>
+        </div>
+        <div class="m-card border-orange">
+            <p class="m-lbl">Cumulative Outflow</p>
+            <h3 class="m-val" th:text="${'₹' + totalSpent}"></h3>
+        </div>
+        <div class="m-card border-green">
+            <p class="m-lbl">Discretionary Remaining</p>
+            <h3 class="m-val" th:text="${'₹' + remainingBudget}">₹50,00.00</h3>
+        </div>
+    </div>
+
+    <!-- Centralized Premium Table Panel -->
+    <div class="table-container">
+        <div class="table-title">Expenditure Stream Audit Records</div>
+        <table class="ui-table">
+            <thead>
+                <tr>
+                    <th>Transaction Name</th>
+                    <th>Classification Category</th>
+                    <th>Timestamp Date</th>
+                    <th style="text-align: right;">Outflow Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="expense : ${recentExpenses}">
+                    <td th:text="${expense.title}" style="font-weight: 600; color: #0f172a;">Item</td>
+                    <td><span class="cat-tag" th:text="${expense.category}">Category</span></td>
+                    <td th:text="${expense.expenseDate}" style="color: #64748b;">Date</td>
+                    <td class="price-text" th:text="${'₹' + expense.amount}">₹0.00</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(recentExpenses)}">
+                    <td colspan="4" class="no-data">No recorded transactions found inside active processing frames.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
